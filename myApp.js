@@ -1,10 +1,19 @@
-require("dotenv").config({ path: "./.env.local" });
+require('dotenv').config();
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+if (!process.env.MONGO_URI) {
+  console.log('⚠️  MONGO_URI is not set. Please add your MongoDB connection string as a secret.');
+  console.log('   The application will not work until MONGO_URI is configured.');
+} else {
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).then(() => {
+    console.log('✓ Connected to MongoDB successfully');
+  }).catch(err => {
+    console.error('✗ MongoDB connection error:', err.message);
+  });
+}
 
 let Person;
 
